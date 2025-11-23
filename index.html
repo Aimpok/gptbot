@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatGPT</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
             margin: 0;
@@ -242,8 +241,6 @@
             font-size: 14px;
             color: white;
             flex-shrink: 0;
-            background-size: cover;
-            background-position: center;
         }
 
         .user-name {
@@ -562,13 +559,13 @@
             align-items: center;
             gap: 6px;
             font-size: 14px;
-            color: #615eeb;
+            color: #8e8ea0;
         }
 
         .star-icon {
             width: 16px;
             height: 16px;
-            color: #615eeb;
+            color: #8e8ea0;
         }
 
         .plan-description {
@@ -779,61 +776,28 @@
         .close-btn:hover {
             background-color: #f0f0f0;
         }
-        
-        /* Loading indicator */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .payment-status {
-            text-align: center;
-            padding: 20px;
-            font-size: 16px;
-        }
-        
-        .success {
-            color: #10a37f;
-        }
-        
-        .error {
-            color: #ff6b6b;
-        }
-        
-        .payment-processing {
-            text-align: center;
-            padding: 20px;
-        }
-        
-        .payment-processing .loading {
-            margin-bottom: 16px;
-        }
-        
-        .subscription-info {
+
+        /* Subscription Status */
+        .subscription-status {
             display: flex;
             align-items: center;
             gap: 8px;
             padding: 8px 16px;
-            background: #f5f5ff;
+            background: #f0f0f0;
             border-radius: 20px;
-            color: #615eeb;
             font-size: 14px;
             font-weight: 500;
+            color: #202123;
         }
-        
-        .subscription-info svg {
-            width: 16px;
-            height: 16px;
+
+        .subscription-status.plus {
+            background: #f5f5ff;
             color: #615eeb;
+        }
+
+        .subscription-status.pro {
+            background: #f0f5ff;
+            color: #1a56db;
         }
     </style>
 </head>
@@ -867,12 +831,22 @@
                 </button>
             </div>
             <div class="chat-history" id="chatHistory">
-                <div class="chat-section-title">Сегодня</div>
-                <!-- Chat items will be populated dynamically -->
+                <div class="chat-section-title">Вчера</div>
+                <div class="chat-item active">Интеграция TON в Telegram-бот...</div>
+                <div class="chat-item">Интеграция оплаты Telegram Sta...</div>
+                <div class="chat-section-title">Последние 7 дней</div>
+                <div class="chat-item">Ошибка 429 при работе с Gemini...</div>
+                <div class="chat-item">Оператор управления циклами...</div>
+                <div class="chat-item">Уменьшение полигонов конуса в...</div>
+                <div class="chat-section-title">Ранее</div>
+                <div class="chat-item">Реферат: музей-заповедник «Ар...</div>
+                <div class="chat-item">Произвольная трансляция: свойст...</div>
+                <div class="chat-item">Правила именования переменн...</div>
+                <div class="chat-item">Главный чат</div>
             </div>
             <div class="sidebar-footer">
                 <button class="sidebar-icon-btn" title="Аватар">
-                    <div class="user-avatar" id="userAvatar" style="width: 32px; height: 32px;">A</div>
+                    <div class="user-avatar" id="sidebarAvatar" style="width: 32px; height: 32px;">A</div>
                 </button>
                 <button class="sidebar-icon-btn" onclick="openSettings()" title="Настройки">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -881,8 +855,8 @@
                     </svg>
                 </button>
                 <div class="user-info">
-                    <div class="user-avatar" id="userAvatarSidebar">A</div>
-                    <div class="user-name" id="userName">Загрузка...</div>
+                    <div class="user-avatar" id="userAvatar">A</div>
+                    <div class="user-name" id="userName">Aimp ok</div>
                     <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" onclick="openSettings()">
                         <circle cx="12" cy="12" r="3"/>
                         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
@@ -894,9 +868,18 @@
         <!-- Main Content -->
         <main class="main-content">
             <div class="top-bar">
-                <div id="subscriptionStatus">
-                    <!-- Будет заполнено динамически -->
+                <div id="subscriptionStatus" class="subscription-status" style="display: none;">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
+                    <span id="subscriptionText">Бесплатно</span>
                 </div>
+                <button class="upgrade-btn" id="upgradeBtn" onclick="openSubscription()">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
+                    <span>Перейти на Плюс</span>
+                </button>
             </div>
 
             <div class="chat-area" id="chatArea">
@@ -994,7 +977,7 @@
                             <span>Лимит: 50 сообщений в день</span>
                         </div>
                     </div>
-                    <button class="plan-button current" id="freePlanBtn" disabled>Текущий план</button>
+                    <button class="plan-button current" disabled id="freePlanBtn">Текущий план</button>
                 </div>
 
                 <!-- План Плюс -->
@@ -1003,13 +986,12 @@
                         <div class="plan-name">Плюс</div>
                         <div class="plan-price-container">
                             <div class="plan-price">100</div>
-                            <div class="plan-period">Stars</div>
-                        </div>
-                        <div class="plan-stars">
-                            <svg class="star-icon" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-                            </svg>
-                            <span>в месяц</span>
+                            <div class="plan-stars" style="margin-left: 8px;">
+                                <svg class="star-icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                                </svg>
+                                <span>в месяц</span>
+                            </div>
                         </div>
                         <div class="plan-description">Расширенные возможности для более сложных задач</div>
                     </div>
@@ -1054,13 +1036,12 @@
                         <div class="plan-name">Pro</div>
                         <div class="plan-price-container">
                             <div class="plan-price">500</div>
-                            <div class="plan-period">Stars</div>
-                        </div>
-                        <div class="plan-stars">
-                            <svg class="star-icon" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-                            </svg>
-                            <span>в месяц</span>
+                            <div class="plan-stars" style="margin-left: 8px;">
+                                <svg class="star-icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                                </svg>
+                                <span>в месяц</span>
+                            </div>
                         </div>
                         <div class="plan-description">Максимальная производительность для профессионалов</div>
                     </div>
@@ -1102,196 +1083,119 @@
         </div>
     </div>
 
-    <!-- Payment Processing Modal -->
-    <div class="modal" id="paymentModal">
-        <div class="modal-content">
-            <div class="payment-processing">
-                <div class="loading"></div>
-                <h3>Обработка платежа</h3>
-                <p>Пожалуйста, подождите...</p>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // Telegram Mini App инициализация
-        const tg = window.Telegram.WebApp;
+        // Telegram Mini Apps Integration
+        const tg = window.Telegram?.WebApp;
         
-        // Инициализация приложения
-        tg.expand();
-        tg.enableClosingConfirmation();
-        
-        // Данные пользователя
-        let userData = null;
-        let userSubscription = null;
         let chats = [];
         let currentChatId = null;
         let selectedPlan = null;
-        
-        // Инициализация при загрузке
-        document.addEventListener('DOMContentLoaded', function() {
-            initUserData();
-            loadUserData();
-            updateUI();
-        });
-        
-        // Получение данных пользователя из Telegram
-        function initUserData() {
-            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                userData = tg.initDataUnsafe.user;
-                console.log('User data:', userData);
+        let userSubscription = 'free'; // free, plus, pro
+        let userData = {
+            id: null,
+            firstName: 'Aimp',
+            lastName: 'ok',
+            username: 'aimpok',
+            avatar: 'A'
+        };
+
+        // Initialize Telegram Mini App
+        function initTelegramApp() {
+            if (tg) {
+                tg.expand();
+                tg.enableClosingConfirmation();
                 
-                // Обновляем имя пользователя
-                const userNameElement = document.getElementById('userName');
-                if (userData.first_name) {
-                    userNameElement.textContent = userData.first_name + (userData.last_name ? ' ' + userData.last_name : '');
-                } else if (userData.username) {
-                    userNameElement.textContent = userData.username;
-                } else {
-                    userNameElement.textContent = 'Пользователь';
+                // Get user data from Telegram
+                const initData = tg.initData || {};
+                const initDataUnsafe = tg.initDataUnsafe || {};
+                const user = initDataUnsafe.user || {};
+                
+                if (user) {
+                    userData.id = user.id;
+                    userData.firstName = user.first_name || 'User';
+                    userData.lastName = user.last_name || '';
+                    userData.username = user.username || '';
+                    userData.avatar = userData.firstName.charAt(0).toUpperCase();
+                    
+                    // Update UI with user data
+                    document.getElementById('userName').textContent = `${userData.firstName} ${userData.lastName}`.trim() || userData.username || 'User';
+                    document.getElementById('userAvatar').textContent = userData.avatar;
+                    document.getElementById('sidebarAvatar').textContent = userData.avatar;
                 }
                 
-                // Обновляем аватар (если доступен)
-                updateUserAvatar();
-            } else {
-                // Если данных нет, используем заглушку
-                document.getElementById('userName').textContent = 'Пользователь';
-            }
-        }
-        
-        // Обновление аватара пользователя
-        function updateUserAvatar() {
-            const avatarElements = document.querySelectorAll('.user-avatar');
-            
-            // Если у пользователя есть фото, можно попробовать получить его через Bot API
-            // В реальном приложении это потребует серверной части
-            if (userData && userData.id) {
-                // Заглушка для демонстрации - используем первую букву имени
-                const firstName = userData.first_name || 'П';
-                const firstLetter = firstName.charAt(0).toUpperCase();
+                // Load subscription from localStorage (in real app - from server)
+                const savedSubscription = localStorage.getItem('userSubscription');
+                if (savedSubscription) {
+                    userSubscription = savedSubscription;
+                }
                 
-                avatarElements.forEach(avatar => {
-                    avatar.textContent = firstLetter;
-                    // В реальном приложении здесь будет URL аватара
-                    // avatar.style.backgroundImage = `url(${avatarUrl})`;
-                });
+                updateSubscriptionUI();
             }
         }
-        
-        // Загрузка данных пользователя из localStorage
-        function loadUserData() {
-            const savedUserData = localStorage.getItem('chatgpt_user_data');
-            const savedSubscription = localStorage.getItem('chatgpt_subscription');
-            const savedChats = localStorage.getItem('chatgpt_chats');
+
+        // Update subscription UI based on current plan
+        function updateSubscriptionUI() {
+            const statusElement = document.getElementById('subscriptionStatus');
+            const upgradeBtn = document.getElementById('upgradeBtn');
+            const freePlanBtn = document.getElementById('freePlanBtn');
+            const plusPlanBtn = document.getElementById('plusPlanBtn');
+            const proPlanBtn = document.getElementById('proPlanBtn');
             
-            if (savedUserData) {
-                try {
-                    const parsedData = JSON.parse(savedUserData);
-                    // Объединяем данные из Telegram с сохраненными
-                    userData = { ...userData, ...parsedData };
-                } catch (e) {
-                    console.error('Error parsing user data:', e);
-                }
-            }
-            
-            if (savedSubscription) {
-                try {
-                    userSubscription = JSON.parse(savedSubscription);
-                } catch (e) {
-                    console.error('Error parsing subscription data:', e);
-                }
-            }
-            
-            if (savedChats) {
-                try {
-                    chats = JSON.parse(savedChats);
-                } catch (e) {
-                    console.error('Error parsing chats data:', e);
-                }
-            }
-            
-            // Если есть активный чат, загружаем его
-            if (chats.length > 0) {
-                currentChatId = chats[chats.length - 1].id;
-                loadChat(currentChatId);
-            }
-        }
-        
-        // Сохранение данных пользователя в localStorage
-        function saveUserData() {
-            if (userData) {
-                localStorage.setItem('chatgpt_user_data', JSON.stringify(userData));
-            }
-            if (userSubscription) {
-                localStorage.setItem('chatgpt_subscription', JSON.stringify(userSubscription));
-            }
-            localStorage.setItem('chatgpt_chats', JSON.stringify(chats));
-        }
-        
-        // Обновление интерфейса в зависимости от подписки
-        function updateUI() {
-            const subscriptionStatus = document.getElementById('subscriptionStatus');
-            
-            if (userSubscription) {
-                // Пользователь имеет подписку
-                subscriptionStatus.innerHTML = `
-                    <div class="subscription-info">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
+            switch (userSubscription) {
+                case 'plus':
+                    statusElement.style.display = 'flex';
+                    statusElement.className = 'subscription-status plus';
+                    statusElement.innerHTML = `
+                        <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
                         </svg>
-                        <span>Подписка: ${userSubscription.plan}</span>
-                        <button onclick="openSubscription()" style="background:none;border:none;color:#615eeb;cursor:pointer;margin-left:8px;">⚙️</button>
-                    </div>
-                `;
-                
-                // Обновляем кнопки в модальном окне
-                const freePlanBtn = document.getElementById('freePlanBtn');
-                const plusPlanBtn = document.getElementById('plusPlanBtn');
-                const proPlanBtn = document.getElementById('proPlanBtn');
-                
-                freePlanBtn.textContent = 'Бесплатный';
-                freePlanBtn.disabled = true;
-                
-                if (userSubscription.plan === 'plus') {
-                    plusPlanBtn.textContent = 'Текущий план';
+                        <span>Плюс</span>
+                    `;
+                    upgradeBtn.textContent = 'Управление подпиской';
+                    freePlanBtn.disabled = false;
+                    freePlanBtn.textContent = 'Перейти на Бесплатно';
                     plusPlanBtn.disabled = true;
-                    plusPlanBtn.classList.add('current');
+                    plusPlanBtn.textContent = 'Текущий план';
+                    proPlanBtn.disabled = false;
                     proPlanBtn.textContent = 'Перейти на Pro';
-                } else if (userSubscription.plan === 'pro') {
-                    proPlanBtn.textContent = 'Текущий план';
-                    proPlanBtn.disabled = true;
-                    proPlanBtn.classList.add('current');
+                    break;
+                    
+                case 'pro':
+                    statusElement.style.display = 'flex';
+                    statusElement.className = 'subscription-status pro';
+                    statusElement.innerHTML = `
+                        <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                        </svg>
+                        <span>Pro</span>
+                    `;
+                    upgradeBtn.textContent = 'Управление подпиской';
+                    freePlanBtn.disabled = false;
+                    freePlanBtn.textContent = 'Перейти на Бесплатно';
+                    plusPlanBtn.disabled = false;
                     plusPlanBtn.textContent = 'Перейти на Плюс';
-                }
-            } else {
-                // Пользователь без подписки
-                subscriptionStatus.innerHTML = `
-                    <button class="upgrade-btn" onclick="openSubscription()">
+                    proPlanBtn.disabled = true;
+                    proPlanBtn.textContent = 'Текущий план';
+                    break;
+                    
+                default: // free
+                    statusElement.style.display = 'none';
+                    upgradeBtn.innerHTML = `
                         <svg viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
                         </svg>
                         <span>Перейти на Плюс</span>
-                    </button>
-                `;
-                
-                // Сбрасываем кнопки в модальном окне
-                const freePlanBtn = document.getElementById('freePlanBtn');
-                const plusPlanBtn = document.getElementById('plusPlanBtn');
-                const proPlanBtn = document.getElementById('proPlanBtn');
-                
-                freePlanBtn.textContent = 'Текущий план';
-                plusPlanBtn.textContent = 'Перейти на Плюс';
-                proPlanBtn.textContent = 'Перейти на Pro';
-                plusPlanBtn.disabled = false;
-                proPlanBtn.disabled = false;
-                plusPlanBtn.classList.remove('current');
-                proPlanBtn.classList.remove('current');
+                    `;
+                    freePlanBtn.disabled = true;
+                    freePlanBtn.textContent = 'Текущий план';
+                    plusPlanBtn.disabled = false;
+                    plusPlanBtn.textContent = 'Перейти на Плюс';
+                    proPlanBtn.disabled = false;
+                    proPlanBtn.textContent = 'Перейти на Pro';
+                    break;
             }
-            
-            // Обновляем историю чатов
-            updateChatHistory();
         }
-        
+
         // Open sidebar on mobile
         function openSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -1340,77 +1244,51 @@
         function selectPlan(plan) {
             selectedPlan = plan;
             
+            if (userSubscription === plan) {
+                alert(`У вас уже активирован план ${plan === 'plus' ? 'Плюс' : 'Pro'}`);
+                return;
+            }
+            
             const planNames = {
                 'plus': 'Плюс',
                 'pro': 'Pro'
             };
             
-            // Показываем попап оплаты
-            showPaymentPopup(planNames[plan], getPlanPrice(plan));
-        }
-        
-        // Получение цены плана в Stars
-        function getPlanPrice(plan) {
-            const prices = {
+            const planPrices = {
                 'plus': 100,
                 'pro': 500
             };
-            return prices[plan] || 0;
-        }
-        
-        // Показ попапа оплаты
-        function showPaymentPopup(planName, price) {
-            tg.showPopup({
-                title: `Оформление подписки ${planName}`,
-                message: `Вы уверены, что хотите оформить подписку ${planName} за ${price} Stars?`,
-                buttons: [
-                    {id: 'pay', type: 'default', text: 'Оплатить'},
-                    {id: 'cancel', type: 'cancel', text: 'Отмена'}
-                ]
-            }, function(buttonId) {
-                if (buttonId === 'pay') {
-                    processPayment(selectedPlan, price);
+            
+            if (tg && tg.openInvoice) {
+                // Use Telegram payment for new subscriptions
+                const payload = `subscription_${plan}_${Date.now()}_${userData.id}`;
+                
+                tg.openInvoice(
+                    `https://t.me/your_bot?start=${payload}`,
+                    (status) => {
+                        if (status === 'paid') {
+                            // Payment successful
+                            userSubscription = plan;
+                            localStorage.setItem('userSubscription', plan);
+                            updateSubscriptionUI();
+                            closeSubscription();
+                            alert(`Поздравляем! Вы успешно подписались на план ${planNames[plan]}!`);
+                        } else {
+                            alert(`Ошибка платежа: ${status}`);
+                        }
+                    }
+                );
+            } else {
+                // Fallback for testing without Telegram
+                const confirmUpgrade = confirm(`Оформить подписку ${planNames[plan]} за ${planPrices[plan]} звёзд?`);
+                if (confirmUpgrade) {
+                    userSubscription = plan;
+                    localStorage.setItem('userSubscription', plan);
+                    updateSubscriptionUI();
+                    closeSubscription();
+                    alert(`Поздравляем! Вы успешно подписались на план ${planNames[plan]}!`);
                 }
-            });
-        }
-        
-        // Обработка платежа через Telegram Stars
-        function processPayment(plan, price) {
-            // Показываем модальное окно обработки платежа
-            document.getElementById('paymentModal').classList.add('active');
-            
-            // В реальном приложении здесь будет вызов Telegram Payments API
-            // Для демонстрации симулируем процесс оплаты
-            
-            setTimeout(function() {
-                // Симуляция успешного платежа
-                completePayment(plan, price);
-            }, 3000);
-        }
-        
-        // Завершение платежа
-        function completePayment(plan, price) {
-            // Скрываем модальное окно обработки платежа
-            document.getElementById('paymentModal').classList.remove('active');
-            
-            // Сохраняем информацию о подписке
-            userSubscription = {
-                plan: plan,
-                price: price,
-                purchaseDate: new Date().toISOString(),
-                expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 дней
-            };
-            
-            saveUserData();
-            updateUI();
-            closeSubscription();
-            
-            // Показываем сообщение об успехе
-            tg.showPopup({
-                title: 'Поздравляем!',
-                message: `Вы успешно оформили подписку ${plan}!`,
-                buttons: [{id: 'ok', type: 'default', text: 'OK'}]
-            });
+            }
         }
 
         // Auto-resize textarea with line breaks
@@ -1459,8 +1337,6 @@
             if (window.innerWidth <= 768) {
                 closeSidebar();
             }
-            
-            saveUserData();
         }
 
         // Clear chat display
@@ -1475,43 +1351,19 @@
 
         // Send message
         function sendMessage() {
-            // Проверяем подписку
-            if (!userSubscription) {
-                const messageCount = getTodayMessageCount();
-                if (messageCount >= 50) {
-                    tg.showPopup({
-                        title: 'Лимит сообщений',
-                        message: 'Вы исчерпали лимит бесплатных сообщений. Оформите подписку, чтобы продолжить.',
-                        buttons: [
-                            {id: 'subscribe', type: 'default', text: 'Оформить подписку'},
-                            {id: 'cancel', type: 'cancel', text: 'Отмена'}
-                        ]
-                    }, function(buttonId) {
-                        if (buttonId === 'subscribe') {
-                            openSubscription();
-                        }
-                    });
-                    return;
-                }
-            } else {
-                // Проверяем лимит в зависимости от подписки
-                const messageCount = getTodayMessageCount();
-                const limit = userSubscription.plan === 'plus' ? 200 : 1000;
-                
-                if (messageCount >= limit) {
-                    tg.showPopup({
-                        title: 'Лимит сообщений',
-                        message: `Вы исчерпали лимит сообщений для вашей подписки (${limit} в день).`,
-                        buttons: [{id: 'ok', type: 'default', text: 'OK'}]
-                    });
-                    return;
-                }
-            }
-            
             const input = document.getElementById('messageInput');
             const message = input.value.trim();
             
             if (!message) return;
+
+            // Check message limits based on subscription
+            const messageCount = getTodayMessageCount();
+            const limit = userSubscription === 'free' ? 50 : userSubscription === 'plus' ? 200 : 1000;
+            
+            if (messageCount >= limit) {
+                alert(`Достигнут дневной лимит сообщений (${limit}). Перейдите на более высокий тариф для увеличения лимита.`);
+                return;
+            }
 
             // Create new chat if none exists
             if (!currentChatId) {
@@ -1531,6 +1383,7 @@
 
             // Add user message
             addMessage('user', message);
+            incrementMessageCount();
 
             // Clear input
             input.value = '';
@@ -1555,23 +1408,7 @@
                     currentChat.title = message.substring(0, 40) + (message.length > 40 ? '...' : '');
                     updateChatHistory();
                 }
-                
-                saveUserData();
             }, 1000);
-        }
-        
-        // Получение количества сообщений за сегодня
-        function getTodayMessageCount() {
-            const today = new Date().toDateString();
-            let count = 0;
-            
-            chats.forEach(chat => {
-                // В реальном приложении здесь будет подсчет сообщений за сегодня
-                // Для демонстрации считаем все сообщения
-                count += chat.messages ? chat.messages.length : 0;
-            });
-            
-            return count;
         }
 
         // Add message to chat
@@ -1594,7 +1431,7 @@
             if (currentChatId) {
                 const currentChat = chats.find(c => c.id === currentChatId);
                 if (currentChat) {
-                    currentChat.messages.push({ role, content, timestamp: new Date().toISOString() });
+                    currentChat.messages.push({ role, content });
                 }
             }
         }
@@ -1609,22 +1446,22 @@
                 chats.slice().reverse().forEach(chat => {
                     html += `<div class="chat-item ${chat.id === currentChatId ? 'active' : ''}" onclick="loadChat(${chat.id})">${chat.title}</div>`;
                 });
-            } else {
-                html += `
-                    <div class="chat-section-title">Вчера</div>
-                    <div class="chat-item">Интеграция TON в Telegram-бот...</div>
-                    <div class="chat-item">Интеграция оплаты Telegram Sta...</div>
-                    <div class="chat-section-title">Последние 7 дней</div>
-                    <div class="chat-item">Ошибка 429 при работе с Gemini...</div>
-                    <div class="chat-item">Оператор управления циклами...</div>
-                    <div class="chat-item">Уменьшение полигонов конуса в...</div>
-                    <div class="chat-section-title">Ранее</div>
-                    <div class="chat-item">Реферат: музей-заповедник «Ар...</div>
-                    <div class="chat-item">Произвольная трансляция: свойст...</div>
-                    <div class="chat-item">Правила именования переменн...</div>
-                    <div class="chat-item">Главный чат</div>
-                `;
             }
+            
+            html += `
+                <div class="chat-section-title">Вчера</div>
+                <div class="chat-item">Интеграция TON в Telegram-бот...</div>
+                <div class="chat-item">Интеграция оплаты Telegram Sta...</div>
+                <div class="chat-section-title">Последние 7 дней</div>
+                <div class="chat-item">Ошибка 429 при работе с Gemini...</div>
+                <div class="chat-item">Оператор управления циклами...</div>
+                <div class="chat-item">Уменьшение полигонов конуса в...</div>
+                <div class="chat-section-title">Ранее</div>
+                <div class="chat-item">Реферат: музей-заповедник «Ар...</div>
+                <div class="chat-item">Произвольная трансляция: свойст...</div>
+                <div class="chat-item">Правила именования переменн...</div>
+                <div class="chat-item">Главный чат</div>
+            `;
             
             historyDiv.innerHTML = html;
         }
@@ -1666,8 +1503,24 @@
             messagesDiv.appendChild(messageDiv);
         }
 
+        // Message counter functions
+        function getTodayMessageCount() {
+            const today = new Date().toDateString();
+            const data = JSON.parse(localStorage.getItem('messageCount') || '{}');
+            return data[today] || 0;
+        }
+
+        function incrementMessageCount() {
+            const today = new Date().toDateString();
+            const data = JSON.parse(localStorage.getItem('messageCount') || '{}');
+            data[today] = (data[today] || 0) + 1;
+            localStorage.setItem('messageCount', JSON.stringify(data));
+        }
+
         // Initialize
         window.addEventListener('load', () => {
+            initTelegramApp();
+            
             // Auto-hide sidebar on mobile
             if (window.innerWidth <= 768) {
                 document.getElementById('sidebar').classList.add('hidden');
