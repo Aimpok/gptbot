@@ -288,10 +288,10 @@
             align-items: center;
             gap: 8px;
             padding: 8px 16px;
-            background: #f0f0f0;
+            background: #f5f5ff;
             border: none;
             border-radius: 20px;
-            color: #202123;
+            color: #615eeb;
             cursor: pointer;
             font-size: 14px;
             font-weight: 500;
@@ -299,12 +299,13 @@
         }
 
         .upgrade-btn:hover {
-            background-color: #e5e5e5;
+            background-color: #e8e8ff;
         }
 
         .upgrade-btn svg {
             width: 16px;
             height: 16px;
+            color: #615eeb;
         }
 
         .chat-area {
@@ -561,13 +562,13 @@
             align-items: center;
             gap: 6px;
             font-size: 14px;
-            color: #8e8ea0;
+            color: #615eeb;
         }
 
         .star-icon {
             width: 16px;
             height: 16px;
-            color: #8e8ea0;
+            color: #615eeb;
         }
 
         .plan-description {
@@ -816,6 +817,24 @@
         .payment-processing .loading {
             margin-bottom: 16px;
         }
+        
+        .subscription-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #f5f5ff;
+            border-radius: 20px;
+            color: #615eeb;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .subscription-info svg {
+            width: 16px;
+            height: 16px;
+            color: #615eeb;
+        }
     </style>
 </head>
 <body>
@@ -875,12 +894,9 @@
         <!-- Main Content -->
         <main class="main-content">
             <div class="top-bar">
-                <button class="upgrade-btn" id="upgradeBtn" onclick="openSubscription()">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-                    </svg>
-                    <span id="upgradeBtnText">Перейти на Плюс</span>
-                </button>
+                <div id="subscriptionStatus">
+                    <!-- Будет заполнено динамически -->
+                </div>
             </div>
 
             <div class="chat-area" id="chatArea">
@@ -1214,18 +1230,25 @@
         
         // Обновление интерфейса в зависимости от подписки
         function updateUI() {
-            const upgradeBtn = document.getElementById('upgradeBtn');
-            const upgradeBtnText = document.getElementById('upgradeBtnText');
-            const freePlanBtn = document.getElementById('freePlanBtn');
-            const plusPlanBtn = document.getElementById('plusPlanBtn');
-            const proPlanBtn = document.getElementById('proPlanBtn');
+            const subscriptionStatus = document.getElementById('subscriptionStatus');
             
             if (userSubscription) {
                 // Пользователь имеет подписку
-                upgradeBtnText.textContent = `Подписка: ${userSubscription.plan}`;
-                upgradeBtn.disabled = true;
+                subscriptionStatus.innerHTML = `
+                    <div class="subscription-info">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                        </svg>
+                        <span>Подписка: ${userSubscription.plan}</span>
+                        <button onclick="openSubscription()" style="background:none;border:none;color:#615eeb;cursor:pointer;margin-left:8px;">⚙️</button>
+                    </div>
+                `;
                 
                 // Обновляем кнопки в модальном окне
+                const freePlanBtn = document.getElementById('freePlanBtn');
+                const plusPlanBtn = document.getElementById('plusPlanBtn');
+                const proPlanBtn = document.getElementById('proPlanBtn');
+                
                 freePlanBtn.textContent = 'Бесплатный';
                 freePlanBtn.disabled = true;
                 
@@ -1242,10 +1265,20 @@
                 }
             } else {
                 // Пользователь без подписки
-                upgradeBtnText.textContent = 'Перейти на Плюс';
-                upgradeBtn.disabled = false;
+                subscriptionStatus.innerHTML = `
+                    <button class="upgrade-btn" onclick="openSubscription()">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                        </svg>
+                        <span>Перейти на Плюс</span>
+                    </button>
+                `;
                 
                 // Сбрасываем кнопки в модальном окне
+                const freePlanBtn = document.getElementById('freePlanBtn');
+                const plusPlanBtn = document.getElementById('plusPlanBtn');
+                const proPlanBtn = document.getElementById('proPlanBtn');
+                
                 freePlanBtn.textContent = 'Текущий план';
                 plusPlanBtn.textContent = 'Перейти на Плюс';
                 proPlanBtn.textContent = 'Перейти на Pro';
