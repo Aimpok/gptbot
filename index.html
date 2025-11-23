@@ -807,6 +807,15 @@
         .error {
             color: #ff6b6b;
         }
+        
+        .payment-processing {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .payment-processing .loading {
+            margin-bottom: 16px;
+        }
     </style>
 </head>
 <body>
@@ -978,6 +987,7 @@
                         <div class="plan-name">Плюс</div>
                         <div class="plan-price-container">
                             <div class="plan-price">100</div>
+                            <div class="plan-period">Stars</div>
                         </div>
                         <div class="plan-stars">
                             <svg class="star-icon" viewBox="0 0 24 24" fill="currentColor">
@@ -1028,6 +1038,7 @@
                         <div class="plan-name">Pro</div>
                         <div class="plan-price-container">
                             <div class="plan-price">500</div>
+                            <div class="plan-period">Stars</div>
                         </div>
                         <div class="plan-stars">
                             <svg class="star-icon" viewBox="0 0 24 24" fill="currentColor">
@@ -1071,6 +1082,17 @@
                     </div>
                     <button class="plan-button" id="proPlanBtn" onclick="selectPlan('pro')">Перейти на Pro</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Processing Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <div class="payment-processing">
+                <div class="loading"></div>
+                <h3>Обработка платежа</h3>
+                <p>Пожалуйста, подождите...</p>
             </div>
         </div>
     </div>
@@ -1319,40 +1341,43 @@
             });
         }
         
-        // Обработка платежа
+        // Обработка платежа через Telegram Stars
         function processPayment(plan, price) {
-            // В реальном приложении здесь будет вызов Telegram Payments
-            // Для демонстрации симулируем успешный платеж
+            // Показываем модальное окно обработки платежа
+            document.getElementById('paymentModal').classList.add('active');
             
-            tg.showPopup({
-                title: 'Обработка платежа',
-                message: 'Пожалуйста, подождите...',
-                buttons: []
-            });
+            // В реальном приложении здесь будет вызов Telegram Payments API
+            // Для демонстрации симулируем процесс оплаты
             
-            // Симуляция обработки платежа
             setTimeout(function() {
-                tg.closePopup();
-                
-                // Успешный платеж
-                userSubscription = {
-                    plan: plan,
-                    price: price,
-                    purchaseDate: new Date().toISOString(),
-                    expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 дней
-                };
-                
-                saveUserData();
-                updateUI();
-                closeSubscription();
-                
-                tg.showPopup({
-                    title: 'Поздравляем!',
-                    message: `Вы успешно оформили подписку ${plan}!`,
-                    buttons: [{id: 'ok', type: 'default', text: 'OK'}]
-                });
-                
-            }, 2000);
+                // Симуляция успешного платежа
+                completePayment(plan, price);
+            }, 3000);
+        }
+        
+        // Завершение платежа
+        function completePayment(plan, price) {
+            // Скрываем модальное окно обработки платежа
+            document.getElementById('paymentModal').classList.remove('active');
+            
+            // Сохраняем информацию о подписке
+            userSubscription = {
+                plan: plan,
+                price: price,
+                purchaseDate: new Date().toISOString(),
+                expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 дней
+            };
+            
+            saveUserData();
+            updateUI();
+            closeSubscription();
+            
+            // Показываем сообщение об успехе
+            tg.showPopup({
+                title: 'Поздравляем!',
+                message: `Вы успешно оформили подписку ${plan}!`,
+                buttons: [{id: 'ok', type: 'default', text: 'OK'}]
+            });
         }
 
         // Auto-resize textarea with line breaks
